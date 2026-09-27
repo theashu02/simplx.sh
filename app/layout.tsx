@@ -17,7 +17,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${ubuntu.variable} h-full antialiased`}
+      className={`${ubuntu.variable} h-full antialiased`} suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-(--font-ubuntu)">{children}</body>
     </html>
