@@ -34,23 +34,11 @@ export async function sendWaitlistEmail(to: string) {
                 <tr>
                   <td style="background-color: #012f2c; padding: 48px 40px 40px; text-align: center;">
                     <h1 style="margin: 0 0 8px; font-size: 36px; font-weight: 900; color: #e4fdb0; letter-spacing: -2px; line-height: 1;">
-                      SimPLx.sh
+                      Simplx.sh
                     </h1>
                     <p style="margin: 0; font-size: 11px; color: #e4fdb0; opacity: 0.5; letter-spacing: 4px; text-transform: uppercase;">
                       Something big is coming
                     </p>
-                  </td>
-                </tr>
-
-                <!-- Image Section -->
-                <tr>
-                  <td style="background-color: #e4fdb0; padding: 32px 40px 24px; text-align: center;">
-                    <img
-                      src="https://res.cloudinary.com/dntxrtlsj/image/upload/v1790373595/404_faxvhq.avif"
-                      alt="simplx.sh"
-                      width="200"
-                      style="display: inline-block; max-width: 200px; height: auto; border-radius: 12px;"
-                    />
                   </td>
                 </tr>
 

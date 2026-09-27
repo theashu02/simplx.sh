@@ -97,6 +97,9 @@ export default function Home() {
                   We&apos;ll reach out to{" "}
                   <span className="text-[#012f2c] font-semibold">{email}</span>
                 </p>
+                <p className="text-[#012f2c]/40 text-sm font-medium mt-1">
+                  Check your spam folder if you don&apos;t see the email
+                </p>
               </div>
             )}
           </div>

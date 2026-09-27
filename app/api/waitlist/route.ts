@@ -38,11 +38,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Save to DB
-    await Waitlist.create({ email });
+    // Send email first — only save to DB if email is delivered
+    const emailResult = await sendWaitlistEmail(email);
 
-    // Send email via SMTP (non-blocking)
-    sendWaitlistEmail(email).catch(console.error);
+    if (!emailResult.success) {
+      console.error("Email delivery failed, not saving to DB");
+      return NextResponse.json(
+        { error: "Failed to send confirmation email. Please try again." },
+        { status: 500 }
+      );
+    }
+
+    // Email sent successfully — now save to DB
+    await Waitlist.create({ email });
 
     return NextResponse.json(
       { message: "Successfully joined waitlist" },
