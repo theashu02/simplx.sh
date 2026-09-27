@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import { NotFoundURL } from "@/lib/socialLogos";
+import { useWaitlist } from "@/hooks/useWaitlist";
 
 export default function Home() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const { joinWaitlist, loading, success, error, setError } = useWaitlist();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim() && email.includes("@")) {
-      setSubmitted(true);
+      await joinWaitlist(email);
     }
   };
 
@@ -32,31 +33,69 @@ export default function Home() {
 
           {/* Waitlist */}
           <div className="w-full max-w-sm sm:max-w-md md:max-w-sm animate-[fadeSlideIn_0.7s_ease-out_0.2s_both]">
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                  required
-                  className="flex-1 px-4 py-3.5 md:px-5 md:py-4 bg-[#012f2c]/5 border border-[#012f2c]/10 text-[#012f2c] placeholder:text-[#012f2c]/30 text-sm font-medium outline-none transition-all duration-300 focus:border-[#012f2c]/25 focus:bg-[#012f2c]/8 focus:shadow-[0_0_0_4px_rgba(1,47,44,0.06)]"
-                />
+            {!success ? (
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col sm:flex-row gap-2 w-full relative"
+              >
+                <div className="flex-1 flex flex-col">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (error) setError(null);
+                    }}
+                    placeholder="you@email.com"
+                    required
+                    disabled={loading}
+                    className="w-full px-4 py-3.5 md:px-5 md:py-4 bg-[#012f2c]/5 border border-[#012f2c]/10 text-[#012f2c] placeholder:text-[#012f2c]/30 text-sm font-medium outline-none transition-all duration-300 focus:border-[#012f2c]/25 focus:bg-[#012f2c]/8 focus:shadow-[0_0_0_4px_rgba(1,47,44,0.06)] disabled:opacity-50"
+                  />
+                  {error && (
+                    <span className="text-red-500/80 text-[10px] font-bold uppercase tracking-wide mt-1 text-left ml-1 absolute -bottom-5">
+                      {error}
+                    </span>
+                  )}
+                </div>
                 <button
                   type="submit"
-                  className="px-6 py-3.5 md:px-7 md:py-4 bg-[#012f2c] text-[#e4fdb0] font-bold text-xs tracking-widest uppercase transition-all duration-300 hover:bg-[#012f2c]/85 active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                  disabled={loading}
+                  className="px-6 py-3.5 md:px-7 md:py-4 bg-[#012f2c] text-[#e4fdb0] font-bold text-xs tracking-widest uppercase transition-all duration-300 hover:bg-[#012f2c]/85 active:scale-[0.97] cursor-pointer whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-35"
                 >
-                  JOIN WAITLIST
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-4 w-4 text-[#e4fdb0]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    "JOIN WAITLIST"
+                  )}
                 </button>
               </form>
             ) : (
-              <div className="flex flex-col gap-1 animate-[fadeSlideIn_0.4s_ease-out_both]">
-                <p className="text-[#012f2c] font-bold text-sm tracking-wide">
+              <div className="flex flex-col gap-2 animate-[fadeSlideIn_0.4s_ease-out_both]">
+                <p className="text-[#012f2c] font-bold text-2xl tracking-wide">
                   You&apos;re on the list ✓
                 </p>
-                <p className="text-[#012f2c]/40 text-xs">
+                <p className="text-[#012f2c]/60 text-base">
                   We&apos;ll reach out to{" "}
-                  <span className="text-[#012f2c]/70 font-semibold">{email}</span>
+                  <span className="text-[#012f2c] font-semibold">{email}</span>
                 </p>
               </div>
             )}
@@ -91,6 +130,7 @@ export default function Home() {
               src={NotFoundURL}
               alt="simplx character"
               fill
+              sizes="(max-width: 768px) 220px, (max-width: 1200px) 380px, 450px"
               className="object-contain"
               priority
             />
