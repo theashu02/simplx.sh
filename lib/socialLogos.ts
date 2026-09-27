@@ -1,0 +1,1 @@
+export const NotFoundURL = "https://res.cloudinary.com/dntxrtlsj/image/upload/v1790373595/404_faxvhq.avif"
